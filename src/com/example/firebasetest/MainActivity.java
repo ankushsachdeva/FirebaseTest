@@ -1,16 +1,17 @@
 package com.example.firebasetest;
 
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
-
-import android.os.Bundle;
 import android.app.Activity;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 public class MainActivity extends Activity {
 	ListView lv;
@@ -58,32 +59,36 @@ public class MainActivity extends Activity {
 	private void goOnline(){
 		Firebase.goOnline();
 		mAdapter.add("goOnline");
+		mAdapter.notifyDataSetChanged();
 	}
 	
 	private void goOffline(){
 		Firebase.goOffline();
 		mAdapter.add("goOffline");
+		mAdapter.notifyDataSetChanged();
 	}
 	
 	private void randomRead(){
-		rootRef.child("random").addListenerForSingleValueEvent(new ValueEventListener() {
+		rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
 			
 			@Override
 			public void onDataChange(DataSnapshot snapshot) {
 				mAdapter.add("Read data");
-				
+				mAdapter.notifyDataSetChanged();
 			}
 			
 			@Override
 			public void onCancelled(FirebaseError arg0) {
 				mAdapter.add("Read data->Cancelled");
+				mAdapter.notifyDataSetChanged();
 			}
 		});
 	}
 	
 	private void randomWrite(){
 		mAdapter.add("Write data");
-		rootRef.child("random").push().setValue("a");
+		mAdapter.notifyDataSetChanged();
+		rootRef.push().setValue("a");
 	}
 	
 	@Override
